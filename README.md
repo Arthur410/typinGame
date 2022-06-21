@@ -1,4 +1,4 @@
-# araara
+# typingGame
 
 ## Project setup
 ```
