@@ -10,7 +10,7 @@
       "id": 0,
       "name": "Обычный",
       "description": "Текст из случайных последовательностей букв и знаков препинания.",
-      "textBase": [ "Есть два рода болтунов: одни говорят слишком много, чтобы ничего не сказать, другие тоже говорят слишком много, но потому, что не знают, что сказать. Одни говорят, чтобы скрыть, что они думают, другие – чтобы скрыть, что они ничего не думают.",
+      "textBase": [ "Есть два рода болтунов: одни говорят слишком много, чтобы ничего не сказать, другие тоже говорят слишком много, но потому, что не знают, что сказать. Одни говорят, чтобы скрыть, что они думают, другие - чтобы скрыть, что они ничего не думают.",
         "Он не искал с ней встреч. А она вычеркнула его из своей жизни как нечто ненужное и даже вредное. Ей было все равно, жив он или умер. Но она полагала, что скорее жив, чем мертв. Думала она про него очень редко. Можно сказать, вообще никогда не думала.",
        "Теперь прочитать все написанное в ней не составляло труда, вот только то, что было там написано, сбивало с толку еще больше. Да, это были обычные молитвы, те самые, которые бывший послушник давно уже знал наизусть, только над каждой строкой молитвы была еще одна строка.",
        "А потом она опять забралась в кресло, прихватив с собой шерсть и котенка, и снова принялась за клубок. Но дело у Алисы шло медленно, потому что она все время отвлекалась - то беседовала с Китти, а то бормотала что-то себе под нос.",
@@ -30,12 +30,11 @@
       "id": 2,
       "name": "Обычный английский",
       "description": "Аналог обычного режима в англоязычной версии.",
-      "textBase": [
-        ["Now this is an interesting number, for by a curious coincidence there are approximately a hundred billion stars in our local universe, the Milky Way. So for every man who has ever lived, in this Universe there shines a star."],
-        ["The two babies were already whimpering for food, but became silent when Moon-Watcher snarled at them. One of the mothers, defending the infant she could not properly feed, gave him an angry growl in return; he lacked the energy even to cuff her for her presumption."],
-        ["Now it was light enough to leave. Moon-Watcher picked up the shriveled corpse and dragged it after him as he bent under the low overhang of the cave. Once outside, he threw the body over his shoulder and stood upright - the only animal in all this world able to do so."],
-        ["There were about thirty of them, and they could not have been distinguished from the members of MoonWatcher's own tribe. As they saw him coming they began to dance, shake their arms, and shriek on their side of the stream, and his own people replied in kind."],
-        ["Behind every man now alive stand thirty ghosts, for that is the ratio by which the dead outnumber the living. Since the dawn of time, roughly a hundred billion human beings have walked the planet Earth."]
+      "textBase": ["Now this is an interesting number, for by a curious coincidence there are approximately a hundred billion stars in our local universe, the Milky Way. So for every man who has ever lived, in this Universe there shines a star.",
+      "The two babies were already whimpering for food, but became silent when Moon-Watcher snarled at them. One of the mothers, defending the infant she could not properly feed, gave him an angry growl in return; he lacked the energy even to cuff her for her presumption.",
+      "Now it was light enough to leave. Moon-Watcher picked up the shriveled corpse and dragged it after him as he bent under the low overhang of the cave. Once outside, he threw the body over his shoulder and stood upright - the only animal in all this world able to do so.",
+      "There were about thirty of them, and they could not have been distinguished from the members of MoonWatcher's own tribe. As they saw him coming they began to dance, shake their arms, and shriek on their side of the stream, and his own people replied in kind.",
+      "Behind every man now alive stand thirty ghosts, for that is the ratio by which the dead outnumber the living. Since the dawn of time, roughly a hundred billion human beings have walked the planet Earth."
       ],
       "modeCreate": "wholeText",
       "base": true

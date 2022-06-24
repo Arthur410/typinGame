@@ -65,7 +65,6 @@ export default {
   opacity: 1;
 }
 .header_nav-link:before {
-
   content:"";
   position: absolute;
   bottom: -5px;
