@@ -6,7 +6,7 @@
 
 <script>
 import heightChange from "../heightChange";
-
+import axios from "axios"
 export default {
   mixins: [heightChange],
   created() {
@@ -14,6 +14,11 @@ export default {
   },
   updated() {
     this.defaultHeight()
+  },
+  methods: {
+    getStatistics() {
+      axios.get("/statistics")
+    }
   }
 }
 </script>

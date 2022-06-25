@@ -5,9 +5,7 @@
 </template>
 
 <script>
-import axios from 'axios'
 import textTyping from '../modules/textTyping'
-axios.defaults.baseURL = 'http://localhost:3000'
 import heightChange from "@/heightChange";
 export default {
   data() {
