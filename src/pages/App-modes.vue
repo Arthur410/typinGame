@@ -3,11 +3,10 @@
     <div class="container">
       <div class="modes_row">
         <div class="modes_choice">
-          <div v-for="mode in modes" class="modes_item" style="align-items: center" :key="mode.id" @click="modeChange(mode.name)">
+          <div v-for="mode in modes" class="modes_item" style="align-items: center" :key="mode.id">
             <span style="width:30px; height:30px; display:block; content:''; background:gray"></span>
             <div class="modes_item-info">
-                <span class="more"></span>
-                <h1 style="font-size:22px;">{{ mode.name }}</h1>
+                <h1 style="font-size:22px;" @click="modeChange(mode.name)">{{ mode.name }}</h1>
                 <p style="margin-top: 15px;">{{ mode.description }}</p>
                 <div class="mt15"></div>
                 <button v-if="!mode.base" @click="deleteMode(mode.id)">Удалить режим</button>
@@ -20,10 +19,26 @@
             <div class="modal_block">
               <span class="modal_close" @click="modalChange"></span>
               <div class="modes_interface" >
-                <input placeholder="Название режима" type="text" v-model="modeName">
-                <textarea placeholder="Введите описание" v-model="modeDesc"></textarea>
+                <label for="mode_name" class="bold">Название режима</label>
+                <input id="mode_name" type="text" v-model="modeName">
                 <div class="mt15"></div>
-                <button @click="modalChange(); setMode(modeName, modeDesc); ">Добавить</button>
+                <label for="mode_desc" class="bold">Описание режима</label>
+                <textarea id="mode_desc" v-model="modeDesc"></textarea>
+                <div class="mt15"></div>
+                <label for="mode_types" class="bold">Тип режима</label>
+                <form id="mode_types" class="mode_types" style="padding-left: 10px">
+                  <input name="mode_type" value="withWords" id="words" type="radio" style="margin-right: 5px;">
+                  <label for="words">Слова (Текст для игры будет составляться из слов введенного вами текста, перемешанных в случайном порядке)</label>
+                  <div class="mt15"></div>
+                  <input name="mode_type" value="wholeText" id="text" type="radio" style="margin-right: 5px;">
+                  <label for="text">Текст (Цельные тексты, разделяемые пустой строкой, единственный текст на словарь также допускается)</label>
+                </form>
+                <div class="mt15"></div>
+                <label for="mode_content" class="bold">Содержание</label>
+                <textarea id="mode_content" class="mode_content" v-model="modeContent"></textarea>
+                <div class="mt15"></div>
+
+                <button @click="modalChange(); setMode(modeName, modeDesc, modeContent); ">Добавить</button>
               </div>
             </div>
           </div>
@@ -35,7 +50,6 @@
 
 <script>
 import axios from 'axios'
-axios.defaults.baseURL = 'http://localhost:3000'
 //миксин нужен из за того, что на главном экране высота во всю высоту пользовательского окна,
 //на остальных же нужно возвращать в обычное состояние
 import heightChange from '../heightChange'
@@ -46,7 +60,8 @@ export default {
       modal: false,
       modeName:'',
       modeDesc: '',
-      modesCounter: 0
+      modeContent: '',
+      modesCounter: 0,
     }
   },
   mixins: [heightChange],
@@ -77,21 +92,32 @@ export default {
       this.modal = !this.modal
     },
     // Функция для добавления режима
-    setMode(name, description) {
+    setMode(name, description, content) {
+      let value = document.querySelector('input[name="mode_type"]:checked').value
+      if (value === "withWords") {
+        content = content.split(" ")
+        console.log(content)
+      } else if (value === "wholeText") {
+        content = content.split("\n")
+        console.log(content)
+      }
       let data = JSON.stringify({
         id: this.counter++,
         name,
         description,
+        "textBase": content,
+        "modeCreate": value,
         base: false,
       });
       axios.post('/modes', data, {headers:{"Content-Type" : "application/json"}}).then(() => {
         this.getFromData()
         alert("Режим успешно добавлен.")
       }).catch(error => {
-        console.log(error);
+        console.log(error)
       });
-      this.modName = '';
-      this.modeDesc = '';
+      this.modeName = ''
+      this.modeDesc = ''
+      this.modeContent = ''
     },
     // Функция для удаления режима
     async deleteMode(id) {
@@ -118,7 +144,9 @@ export default {
 </script>
 
 <style scoped>
-
+  .container {
+    position: unset;
+  }
   .modes_row {
     display:flex;
   }
@@ -156,9 +184,12 @@ export default {
 
   .modal_block {
     padding:15px;
-    width: 500px;
+    width: 80%;
     background: #ffff;
     position: relative;
+  }
+  .modal_block label {
+    margin-bottom: 5px;
   }
 
   .modal_close {
@@ -229,6 +260,7 @@ export default {
   }
   .modes_interface {
     display: flex;
+    color: black;
     flex-direction: column;
   }
 
@@ -238,15 +270,25 @@ export default {
   }
 
   .modes_interface input {
-    margin-top: 15px;
     padding:5px;
-    border-bottom: 1px solid #3f413e;
+    border: 1px solid #3f413e;
   }
 
   .modes_interface textarea {
-    margin-top: 15px;
     resize:none;
     padding:5px;
-    border-bottom: 1px solid #3f413e;
+    border: 1px solid #3f413e;
+  }
+
+  .bold {
+    font-weight: 700;
+  }
+
+  .mode_types li {
+    margin: 2px 0;
+  }
+
+  .mode_types-ps {
+    opacity: 0.7;
   }
 </style>
