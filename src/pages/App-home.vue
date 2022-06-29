@@ -2,11 +2,13 @@
   <div class="app_content">
     <text-typing :text="textGoal"></text-typing>
   </div>
+  <App-footer></App-footer>
 </template>
 
 <script>
 import textTyping from '../modules/textTyping'
 import heightChange from "@/heightChange";
+import AppFooter from '../modules/App-footer'
 export default {
   data() {
     return {
@@ -21,7 +23,8 @@ export default {
     this.homeHeight()
   },
   components: {
-    textTyping
+    textTyping,
+    AppFooter
   }
 }
 
