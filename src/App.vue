@@ -184,7 +184,6 @@ h6 {
   }
 }
 
-/* Small devices (landscape phones, 576px and up)*/
 @media (max-width: 992px) {
 
   .row, .modes_row, .footer_inner ul {
@@ -216,7 +215,7 @@ h6 {
     display: block;
   }
 }
-/*Large devices (desktops, 992px and up)*/
+
 @media (max-width: 1200px) {
   .container {
     padding: 15px;
