@@ -22,7 +22,7 @@
                 <label for="mode_name" class="bold">Название режима</label>
                 <input id="mode_name" type="text" v-model="modeName">
                 <div class="mt15"></div>
-                <label for="mode_desc" class="bold">Описание режима</label>
+                <label class="bold">Описание режима</label>
                 <textarea id="mode_desc" v-model="modeDesc"></textarea>
                 <div class="mt15"></div>
                 <label for="mode_types" class="bold">Тип режима</label>
@@ -34,7 +34,7 @@
                   <label for="text">Текст (Цельные тексты, разделяемые пустой строкой, единственный текст на словарь также допускается)</label>
                 </form>
                 <div class="mt15"></div>
-                <label for="mode_content" class="bold">Содержание</label>
+                <label class="bold">Содержание</label>
                 <textarea id="mode_content" class="mode_content" v-model="modeContent"></textarea>
                 <div class="mt15"></div>
 
@@ -90,10 +90,37 @@ export default {
     // Открытие и закрытие модального окна
     modalChange() {
       this.modal = !this.modal
+      const body = document.querySelector('body')
+      if (!body.classList.contains('locked')) {
+        body.classList.add('locked')
+        body.style.height = "100vh"
+        body.style.overflow = "hidden"
+      } else {
+        body.classList.remove('locked')
+        body.style.height = "unset"
+        body.style.overflow = "auto"
+      }
     },
     // Функция для добавления режима
     setMode(name, description, content) {
-      let value = document.querySelector('input[name="mode_type"]:checked').value
+      let value = ''
+      try {
+        value = document.querySelector('input[name="mode_type"]:checked').value
+      } catch {
+        let missedOptions = []
+        if (!name) {
+          missedOptions.push("название режима")
+        }
+        if (!description) {
+          missedOptions.push("описание режима")
+        }
+        if (!content) {
+          missedOptions.push("содержимое режима")
+        }
+        missedOptions.push("тип режима")
+        alert("Вы не ввели" + " " + missedOptions.join(', '))
+        return
+      }
       if (value === "withWords") {
         content = content.split(" ")
         console.log(content)
@@ -130,7 +157,6 @@ export default {
       }
     },
     modeChange(mode) {
-      console.log("Меняем на ", mode)
       localStorage.setItem("mode", mode)
       this.$router.go(0);
     },
@@ -143,152 +169,138 @@ export default {
 }
 </script>
 
-<style scoped>
-  .container {
-    position: unset;
-  }
-  .modes_row {
-    display:flex;
-  }
-  .modes_choice {
-    width: 70%;
-  }
-  .modes_create {
-    margin-top: 50px;
-    width: 30%;
-  }
+<style>
 
-  .modes_create button {
-    opacity: 0.7;
-    padding:10px 15px;
-    background: aliceblue;
-    color: black;
-    transition: all .2s linear;
-  }
+.container {
+  position: unset;
+}
+.modes_row {
+  display:flex;
+}
+.modes_choice {
+  width: 70%;
+}
+.modes_create {
+  margin-top: 50px;
+  width: 30%;
+}
+.modes_create button {
+  opacity: 0.7;
+  padding:10px 15px;
+  background: aliceblue;
+  color: black;
+  transition: all .2s linear;
+}
+.modes_create button:hover {
+  opacity: 1;
+}
+.modal {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0, 0.6);
+  z-index: 2;
+}
+.modal_block {
+  padding:15px;
+  width: 80%;
+  background: #ffff;
+  position: relative;
+}
+.modal_block label {
+  margin-bottom: 5px;
+}
+.modal_close {
+  right: 10px;
+  top: 10px;
+  position: absolute;
+  display: block;
+  width: 20px;
+  height: 20px;
+  cursor:pointer;
+}
+.modal_close:before {
+  width: 100%;
+  background: #3f413e;
+  height: 2px;
+  content:"";
+  position: absolute;
+  top: 50%;
+  transform: rotate(45deg);
+}
+.modal_close:after {
+  width: 100%;
+  background: #3f413e;
+  height: 2px;
+  content:"";
+  position: absolute;
+  top: 50%;
+  transform: rotate(-45deg);
+}
+.modes_item {
+  cursor:pointer;
+  opacity: 0.7;
+  margin: 50px 0;
+  display: flex;
+  position: relative;
+  transition: all .1s linear;
+}
+.modes_item .more {
+  content: "";
+  width: 15px;
+  height: 15px;
+  opacity: 0.7;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.modes_item .more:before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  content:"";
+  width: 7px;
+  height: 7px;
+  border: 7px solid transparent;
+  border-top: 7px solid #fff;
+  opacity: 0.7;
+}
+.modes_item:hover {
+  opacity: 1;
+}
+.modes_item span {
+  margin-right: 15px;
+}
+.modes_interface {
+  display: flex;
+  color: black;
+  flex-direction: column;
+}
+.modes_interface button {
+  background: none;
+  border: 1px solid #3f413e;
+}
+.modes_interface input {
+  padding:5px;
+  border: 1px solid #3f413e;
+}
+.modes_interface textarea {
+  resize:none;
+  padding:5px;
+  border: 1px solid #3f413e;
+}
+.bold {
+  font-weight: 700;
+}
+.mode_types li {
+  margin: 2px 0;
+}
 
-  .modes_create button:hover {
-    opacity: 1;
-  }
-  .modal {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(0,0,0, 0.6);
-    z-index: 2;
-  }
-
-  .modal_block {
-    padding:15px;
-    width: 80%;
-    background: #ffff;
-    position: relative;
-  }
-  .modal_block label {
-    margin-bottom: 5px;
-  }
-
-  .modal_close {
-    right: 15px;
-    top: 15px;
-    position: absolute;
-    display: block;
-    width: 20px;
-    height: 20px;
-    cursor:pointer;
-  }
-  .modal_close:before {
-    width: 100%;
-    background: #3f413e;
-    height: 2px;
-    content:"";
-    position: absolute;
-    top: 50%;
-    transform: rotate(45deg);
-  }
-
-  .modal_close:after {
-    width: 100%;
-    background: #3f413e;
-    height: 2px;
-    content:"";
-    position: absolute;
-    top: 50%;
-    transform: rotate(-45deg);
-  }
-
-  .modes_item {
-    cursor:pointer;
-    opacity: 0.7;
-    margin: 50px 0;
-    display: flex;
-    position: relative;
-    transition: all .1s linear;
-  }
-
-  .modes_item .more {
-    content: "";
-    width: 15px;
-    height: 15px;
-    opacity: 0.7;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .modes_item .more:before {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform:translate(-50%, -50%);
-    content:"";
-    width: 7px;
-    height: 7px;
-    border: 7px solid transparent;
-    border-top: 7px solid #fff;
-    opacity: 0.7;
-  }
-  .modes_item:hover {
-    opacity: 1;
-  }
-
-  .modes_item span {
-    margin-right: 15px;
-  }
-  .modes_interface {
-    display: flex;
-    color: black;
-    flex-direction: column;
-  }
-
-  .modes_interface button {
-    background: none;
-    border: 1px solid #3f413e;
-  }
-
-  .modes_interface input {
-    padding:5px;
-    border: 1px solid #3f413e;
-  }
-
-  .modes_interface textarea {
-    resize:none;
-    padding:5px;
-    border: 1px solid #3f413e;
-  }
-
-  .bold {
-    font-weight: 700;
-  }
-
-  .mode_types li {
-    margin: 2px 0;
-  }
-
-  .mode_types-ps {
-    opacity: 0.7;
-  }
 </style>

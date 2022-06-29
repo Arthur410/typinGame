@@ -13,7 +13,7 @@
       <div class="mt15"></div>
       <div v-if="!textDone" class="text_progress" :key="restSymbols">Осталось набрать {{restSymbols}} символов</div>
       <div class="mt15"></div>
-      <div v-if="!textDone" class="text_progress" :key="restSymbols">Кол-во ошибок: {{errors}}</div>
+      <div v-if="!textDone" class="text_errors" :key="restSymbols">Кол-во ошибок: {{errors}}</div>
       <div class="result" style="text-align: center">
         <p class="typeSpeed" v-if="textDone">Ваша скорость составляет {{typeSpeed}} зн/мин.</p>
         <div class="mt15"></div>
@@ -90,20 +90,16 @@ export default {
             if (curLen >= 1 && curWord.length <= 1) {
               this.textSym = curWord[curWord.length - 1]
               this.restSymbols--
-              console.log(this.textAfter)
               if (this.textAfter[0] === " ") {
                 this.textAfter = this.textAfter.slice(2)
 
               } else {
                 this.textAfter = this.textAfter.slice(1)
               }
-              console.log("Ты ввел что то неправильное и это не первое слово!!")
             } else { //
               this.textSym = curWord[curWord.length - 1]
               this.restSymbols--
-              console.log(this.textAfter)
               this.textAfter = this.textAfter.slice(1)
-              console.log("Ты ввел что то неправильное!!")
             }
           } else { // Если ввод идет правильно по тексту
             this.textSym = curWord[curWord.length - 1]
@@ -146,19 +142,16 @@ export default {
         this.textDone = true
         this.timeEnd = Math.round(+new Date())
         this.typeSpeed = Math.round(this.textGoal.length / ((this.timeEnd - this.timeStart) / 1000) * 60)
-        if (this.errors % 10 === 0) {
-          this.errorsText = `Вы сделали ${this.errors} ошибок`
-        } else if (this.errors % 10 === 1 ) {
-          if (this.errors === 11) {
-            this.errorsText = "Вы сделали 11 ошибок"
-          } else {
-            this.errorsText = `Вы сделали ${this.errors} ошибку`
-          }
-        } else if (2 <= this.errors <= 4) {
-          this.errorsText = `Вы сделали ${this.errors} ошибки`
-        } else if (2 <= this.errors % 10 <= 9) {
-          this.errorsText = `Вы сделали ${this.errors} ошибок`
+        let data = {
+          "speed": this.typeSpeed,
+          "modeName": localStorage.getItem("mode"),
+          "accuracy": this.typeAccuracy,
+          "time": Math.round((this.timeEnd - this.timeStart) / 1000),
+          "date": new Date().getDate() + "." + (new Date().getMonth() + 1)
         }
+        axios.post("/statistics", data, {headers:{"Content-Type" : "application/json"}})
+        let temp = this.declOfNum(this.errors, ['ошибку', 'ошибки', 'ошибок'])
+        this.errorsText = `Вы сделали ${this.errors} ${temp}`
       }
     },
     getRandomIntInclusive(min, max) {
@@ -176,6 +169,14 @@ export default {
       this.textTyped =this.textBefore = this.textSym = this.prevSym = ''
       this.timeStart = this.timeEnd = this.prevLen = this.errors = this.lastError = this.typeAccuracy= 0
     },
+    declOfNum(n, text_forms) {
+      n = Math.abs(n) % 100;
+      let n1 = n % 10;
+      if (n > 10 && n < 20) { return text_forms[2]; }
+      if (n1 > 1 && n1 < 5) { return text_forms[1]; }
+      if (n1 === 1) { return text_forms[0]; }
+      return text_forms[2];
+    }
   },
   created() {
     let mode = localStorage.getItem('mode')
@@ -183,9 +184,11 @@ export default {
       for (let i = 0; i < response.data.length; i++) {
         if (response.data[i].name === mode) {
           if (response.data[i].modeCreate === "withWords") {
-            for (let j = 0; j < 20; j++) {
-              this.textGoal += response.data[i].textBase[this.getRandomIntInclusive(0, response.data.length - 1)]
-              if (j === 19) {
+            const maxWords = 40;
+            let modeWords = response.data[i].textBase[0].split(" ")
+            for (let j = 0; j < maxWords; j++) {
+              this.textGoal += modeWords[this.getRandomIntInclusive(0, modeWords.length - 1)]
+              if (j === maxWords - 1) {
                 this.textGoal += "."
               } else {
                 this.textGoal += " "
@@ -218,6 +221,7 @@ export default {
 }
 .text_placeholder {
   font-size: 32px;
+  transition: all .2s linear;
   color:#fff;
   line-height: 1;
 }
@@ -251,9 +255,8 @@ export default {
   background: #740909;
 }
 
-.text_progress {
+.text_progress, .text_errors {
   text-align: right;
 }
-
 
 </style>
