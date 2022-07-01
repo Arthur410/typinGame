@@ -1,4 +1,4 @@
-# typingGame
+# typinGame
 
 ## Project setup
 ```
