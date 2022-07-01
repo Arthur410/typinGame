@@ -1,6 +1,6 @@
 <template>
-  <div class="statistics_content">
-    <h1>This is statistics page!</h1>
+  <div class="settings_content">
+    <h1>This is settings page!</h1>
   </div>
 </template>
 

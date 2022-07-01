@@ -4,7 +4,8 @@
 </template>
 
 <script>
-import AppHeader from './modules/App-header'
+
+import AppHeader from './App-header'
 export default {
   data() {
     return {
@@ -13,10 +14,7 @@ export default {
     }
   },
   components: {
-    AppHeader,
-  },
-  created() {
-    document.querySelector('body').classList.add('vsc-initialized')
+    AppHeader
   },
   methods: {
     defaultHeight() {
@@ -25,7 +23,6 @@ export default {
       app.style.display = "block"
       app.style.flexDirection = "inherit"
     },
-
   }
 }
 </script>
@@ -34,9 +31,6 @@ export default {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%;
-  height: 100%;
-  position: relative;
 }
 
 /****************** MAIN PAGE *************************/
@@ -64,6 +58,7 @@ button:hover {
 /************************DEFAULT***************************/
 
 * {
+  font-family: 'Fira Sans Extra Condensed', sans-serif;
   padding: 0;
   margin: 0;
   border: 0;
@@ -169,66 +164,5 @@ h5,
 h6 {
   font-size: inherit;
   font-weight: 400;
-}
-
-
-/* ========== Adaptive ================= */
-@media (max-width: 320px) {
-  .container {
-    padding: 15px;
-    max-width: 320px;
-  }
-  .footer_inner ul li {
-    font-size: 14px;
-  }
-
-  .modes_choice .modes_item {
-    margin: 20px 0;
-  }
-}
-
-@media (max-width: 992px) {
-
-  .row, .modes_row, .footer_inner ul {
-    flex-direction: column;
-  }
-  .modes_choice .modes_item {
-    margin: 30px 0;
-  }
-  .modes_row .modes_choice, .modes_row .modes_create {
-    width: 100%;
-    margin-top: 0;
-  }
-
-
-  .text_progress, .footer_inner li, .text_errors {
-    font-size: 20px;
-  }
-
-  #app .footer_inner ul li {
-    margin: 10px 0;
-    border: 0;
-  }
-
-  .header_row {
-    display: none;
-  }
-
-  .header_row.mobile {
-    display: block;
-  }
-}
-
-@media (max-width: 1200px) {
-  .container {
-    padding: 15px;
-    max-width: 992px;
-  }
-  .statistics_inner .row {
-    flex-direction: column;
-  }
-  .statistics_inner .col{
-    width: 100%;
-  }
 }
 </style>
