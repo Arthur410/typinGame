@@ -15,6 +15,9 @@ export default {
   components: {
     AppHeader,
   },
+  created() {
+    document.querySelector('body').classList.add('vsc-initialized')
+  },
   methods: {
     defaultHeight() {
       const app = document.querySelector('#app')
