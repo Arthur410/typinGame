@@ -59,8 +59,9 @@ export default {
   },
   methods: {
     getStatistics() {
-      let totalSpeed = 0
-      let totalAccuracy = 0
+      let frequentSpeed = 0
+      let frequentAccuracy = 0
+      let frequentTexts = 0
       let maxMode = []
       const months = [
             'Январь',
@@ -80,8 +81,6 @@ export default {
         this.textTotal = response.data.length
         for (let i = 0; i < response.data.length; i++) {
           maxMode.push(response.data[i].modeName)
-          totalSpeed += response.data[i].speed
-          totalAccuracy += response.data[i].accuracy
           this.typeTime += response.data[i].time
           if (this.chartData.labels.length === 0) {
             this.chartData.labels.push(months[response.data[i].date.split('.')[1] - 1])
@@ -100,7 +99,7 @@ export default {
         return response
       }).then(response => {
         let totalMax = 0
-        this.frequentMode = maxMode[0]
+        this.frequentMode = "Отсутствует"
         for (let i = 0; i < maxMode.length - 1; i++) {
           let tempMax = 0
           for (let j = i + 1; j < maxMode.length; j++) {
@@ -113,6 +112,13 @@ export default {
             this.frequentMode = maxMode[i]
           }
         }
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].modeName === this.frequentMode) {
+            frequentSpeed += response.data[i].speed
+            frequentAccuracy += response.data[i].accuracy
+            frequentTexts++
+          }
+        }
         if (this.textTotal === 0) {
           this.frequentMode = "Отсутствует"
         } else {
@@ -123,16 +129,17 @@ export default {
           } else {
             this.typeTime = Math.round(this.typeTime / 60 / 60) + " " + this.declOfNum(Math.round(this.typeTime / 60 / 60), ['час', 'часа', 'часов'])
           }
-          this.avSpeed = Math.round(totalSpeed / this.textTotal * 10) / 10
-          this.avAccuracy = Math.round(totalAccuracy / this.textTotal * 10) / 10
+          this.avSpeed = Math.round(frequentSpeed / frequentTexts * 10) / 10
+          this.avAccuracy = Math.round(frequentAccuracy / frequentTexts * 10) / 10
         }
+
         return response
       }).then(response => {
         for (let i = 0; i < this.chartData.labels.length; i++) {
           let monthMax = 0;
           for (let j = 0; j < response.data.length; j++) {
             if (months[response.data[j].date.split('.')[1] - 1] === this.chartData.labels[i]) {
-              if (monthMax < response.data[j].speed) {
+              if (monthMax < response.data[j].speed && response.data[j].modeName === this.frequentMode) {
                 monthMax = response.data[j].speed
               }
             }

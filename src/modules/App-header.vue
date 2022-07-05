@@ -108,7 +108,7 @@ export default {
 }
 
 .header_burger {
-  display: block;
+  display: none;
   cursor:pointer;
   width: 50px;
   height: 50px;

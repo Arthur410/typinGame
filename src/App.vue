@@ -15,6 +15,9 @@ export default {
   components: {
     AppHeader,
   },
+  created() {
+    document.querySelector('body').classList.add('vsc-initialized')
+  },
   methods: {
     defaultHeight() {
       const app = document.querySelector('#app')
@@ -209,6 +212,10 @@ h6 {
 
   .header_row {
     display: none;
+  }
+
+  .header_burger {
+    display: block;
   }
 
   .header_row.mobile {
