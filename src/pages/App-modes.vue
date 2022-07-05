@@ -122,11 +122,9 @@ export default {
         return
       }
       if (value === "withWords") {
-        content = content.split(" ")
-        console.log(content)
+        content = content.split(" ").filter(function(entry) { return entry.trim() !== ''; }).join(" ")
       } else if (value === "wholeText") {
-        content = content.split("\n")
-        console.log(content)
+        content = content.split("\n").filter(function(entry) { return entry.trim() !== ''; });
       }
       let data = JSON.stringify({
         id: this.counter++,
@@ -151,7 +149,9 @@ export default {
       try {
         await axios.delete(`/modes/${id}`)
         this.getFromData()
+        localStorage.setItem('mode', 'Обычный')
         alert("Режим успешно удален.")
+        this.$router.go(0);
       } catch {
         alert("Произошла неожиданная ошибка.")
       }
@@ -205,7 +205,7 @@ export default {
   top: 0;
   left: 0;
   background: rgba(0,0,0, 0.6);
-  z-index: 2;
+  z-index: 22;
 }
 .modal_block {
   padding:15px;

@@ -214,6 +214,10 @@ h6 {
     display: none;
   }
 
+  .header_burger {
+    display: block;
+  }
+
   .header_row.mobile {
     display: block;
   }

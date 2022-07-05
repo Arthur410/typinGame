@@ -47,7 +47,8 @@ export default {
       errors: 0,
       lastError: 0,
       typeAccuracy: 0,
-      errorsText: ''
+      errorsText: '',
+      curMax: 0,
     }
   },
   methods: {
@@ -81,6 +82,12 @@ export default {
           document.querySelector(".text_input").classList.remove("error")
           this.textAfter = this.textSym + this.textAfter
           this.textSym = ""
+        } else if (curWord === "" && this.prevLen > 1) {
+          this.textBefore += this.textSym
+          this.textBefore = this.textBefore.split(" ")
+          this.textAfter = this.textBefore.pop() + this.textAfter
+          this.textSym = ""
+          this.textBefore = this.textBefore.join(" ") + " "
         }
         this.prevLen = curWord.length
       } else {
@@ -111,7 +118,15 @@ export default {
           }
         } else if (curWord.length < this.words[curLen].length) {
           if (this.prevLen > curWord.length && this.lastError) {
-            // Пользователь начал стирать слово
+            if (curWord === temp && curWord.length === 1 && this.prevLen !== 2) {
+              this.textSym = curWord[curWord.length - 1]
+              this.restSymbols--
+              this.textAfter = this.textAfter.slice(1)
+              if (curWord.length > 1) {
+                this.textBefore += curWord[curWord.length - 2]
+              }
+            }
+            //
           } else {
             this.textSym = curWord[curWord.length - 1]
             this.textAfter = this.prevSym + this.textAfter
@@ -142,6 +157,10 @@ export default {
         this.textDone = true
         this.timeEnd = Math.round(+new Date())
         this.typeSpeed = Math.round(this.textGoal.length / ((this.timeEnd - this.timeStart) / 1000) * 60)
+        console.log(this.typeSpeed, this.curMax)
+        if (this.typeSpeed > this.curMax) {
+          alert(`Поздравляем! Вы набирали со скоростью ${this.typeSpeed}. Это ваш личный рекорд в режиме ${localStorage.getItem("mode")}!`)
+        }
         let data = {
           "speed": this.typeSpeed,
           "modeName": localStorage.getItem("mode"),
@@ -185,7 +204,7 @@ export default {
         if (response.data[i].name === mode) {
           if (response.data[i].modeCreate === "withWords") {
             const maxWords = 40;
-            let modeWords = response.data[i].textBase[0].split(" ")
+            let modeWords = response.data[i].textBase.split(" ")
             for (let j = 0; j < maxWords; j++) {
               this.textGoal += modeWords[this.getRandomIntInclusive(0, modeWords.length - 1)]
               if (j === maxWords - 1) {
@@ -195,7 +214,12 @@ export default {
               }
             }
           } else if (response.data[i].modeCreate === "wholeText") {
-            this.textGoal = response.data[i].textBase[this.getRandomIntInclusive(0, response.data.length - 1)]
+            const tempText = response.data[i].textBase[this.getRandomIntInclusive(0, response.data[i].textBase.length - 1)]
+            if (tempText[tempText.length - 1] === '.') {
+              this.textGoal = tempText
+            } else {
+              this.textGoal = tempText + '.'
+            }
           }
         }
       }
@@ -203,6 +227,15 @@ export default {
       this.restSymbols = this.textGoal.length
       this.textAfter = this.textGoal
       this.words = Array.from(this.textGoal.split(" "))
+    })
+    axios.get('/statistics').then(response => {
+      for (let i = 0; i < response.data.length; i++) {
+        if (response.data[i].modeName === mode) {
+          if (response.data[i].speed > this.curMax) {
+            this.curMax = response.data[i].speed
+          }
+        }
+      }
     })
   }
 }
